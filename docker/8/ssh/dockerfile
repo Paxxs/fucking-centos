@@ -1,0 +1,13 @@
+FROM centos:8
+
+# install sshd
+RUN yum install -y openssh-server sudo; yum clean all
+
+# Configure SSH Server for password authentication
+RUN echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
+
+# changePwd
+RUN /usr/bin/echo 'root:1213456' | /usr/sbin/chpasswd
+
+# To start service at runtime
+CMD ["/usr/sbin/sshd", "-D"]

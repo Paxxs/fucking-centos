@@ -5,20 +5,23 @@ import (
 	"embed"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"os/exec"
 	"regexp"
 	"strconv"
 )
 
-// cspell:words Centos
-
+// cspell:words Centos yrjyjp
 //go:embed rpm
 
 var f embed.FS
 
 func main() {
+	var fish = ""
+	var tmux = ""
 	version := getCentosVersion("major")
 	fmt.Println("😀当前系统为", version, "版本")
+	fmt.Println("Made with ❤️ by yrjyjp")
 
 	// 查看嵌入的资源
 	// dirEntries, _ := f.ReadDir("rpm")
@@ -28,60 +31,21 @@ func main() {
 
 	switch version {
 	case 8:
-		fmt.Println("📦 install shell")
-
-		fish, err := f.ReadFile(`rpm/8/fish-3.3.1-1.4.x86_64.rpm`)
-		checkError(err)
-		// todo: 目录问题
-		err = ioutil.WriteFile(`/tmp/1.rpm`, fish, 0777)
-		checkError(err)
-		err = runCommand(`/usr/bin/yum`, `install`, "-y", `/tmp/1.rpm`)
-		checkError(err)
-
-		fmt.Println("📦 install tmux")
-		tmux, err := f.ReadFile(`rpm/8/tmux-2.6-1.11.x86_64.rpm`)
-		checkError(err)
-		err = ioutil.WriteFile(`/tmp/2.rpm`, tmux, 0777)
-		checkError(err)
-		err = runCommand(`/usr/bin/yum`, `install`, "-y", `/tmp/2.rpm`)
-		checkError(err)
+		fish = `rpm/8/fish-3.3.1-1.4.x86_64.rpm`
+		tmux = `rpm/8/tmux-2.6-1.11.x86_64.rpm`
 	case 7:
-		fmt.Println("📦 install shell")
-
-		fish, err := f.ReadFile(`rpm/7/fish-3.3.1-1.1.x86_64.rpm`)
-		checkError(err)
-		// todo: 目录问题
-		err = ioutil.WriteFile(`/tmp/1.rpm`, fish, 0777)
-		checkError(err)
-		err = runCommand(`/usr/bin/yum`, `install`, "-y", `/tmp/1.rpm`)
-		checkError(err)
-
-		fmt.Println("📦 install tmux")
-		tmux, err := f.ReadFile(`rpm/7/tmux-2.9a-4.4.x86_64.rpm`)
-		checkError(err)
-		err = ioutil.WriteFile(`/tmp/2.rpm`, tmux, 0777)
-		checkError(err)
-		err = runCommand(`/usr/bin/yum`, `install`, "-y", `/tmp/2.rpm`)
-		checkError(err)
+		fish = `rpm/7/fish-3.3.1-1.1.x86_64.rpm`
+		tmux = `rpm/7/tmux-2.9a-4.4.x86_64.rpm`
 	case 6:
-		fmt.Println("📦 install shell")
-
-		fish, err := f.ReadFile(`rpm/6/fish-3.1.2+1603.gff144a38d-2.1.x86_64.rpm`)
-		checkError(err)
-		// todo: 目录问题
-		err = ioutil.WriteFile(`/tmp/1.rpm`, fish, 0777)
-		checkError(err)
-		err = runCommand(`/usr/bin/yum`, `install`, "-y", `/tmp/1.rpm`)
-		checkError(err)
-
-		fmt.Println("📦 install tmux")
-		tmux, err := f.ReadFile(`rpm/6/tmux-2.9a-4.1.x86_64.rpm`)
-		checkError(err)
-		err = ioutil.WriteFile(`/tmp/2.rpm`, tmux, 0777)
-		checkError(err)
-		err = runCommand(`/usr/bin/yum`, `install`, "-y", `/tmp/2.rpm`)
-		checkError(err)
+		fish = `rpm/6/fish-3.1.2+1603.gff144a38d-2.1.x86_64.rpm`
+		tmux = `rpm/6/tmux-2.9a-4.1.x86_64.rpm`
 	}
+
+	fmt.Println("📦 install Shell")
+	installPackage(fish)
+
+	fmt.Println("📦 install Terminal Multiplexer")
+	installPackage(tmux)
 }
 
 // 报错
@@ -185,4 +149,18 @@ func runCommand(name string, arg ...string) error {
 		return err
 	}
 	return nil
+}
+
+// 安装rpm包
+func installPackage(embed_path string) {
+	pack, err := f.ReadFile(embed_path)
+	checkError(err)
+	tmpfile, err := ioutil.TempFile("", "boy.*.rpm")
+	checkError(err)
+	// fmt.Println("临时文件：", tmpfile.Name())
+	defer os.Remove(tmpfile.Name())
+	_, err = tmpfile.Write(pack)
+	checkError(err)
+	err = runCommand(`/usr/bin/yum`, `install`, "-y", tmpfile.Name())
+	checkError(err)
 }

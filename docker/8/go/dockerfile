@@ -1,0 +1,22 @@
+# 基于 ssh
+FROM local/centos:8-ssh
+
+ENV gover=1.17
+ENV PATH=${PATH}:/usr/local/go/bin
+
+WORKDIR /srv
+
+# 网络问题，国内不能直接下载
+# RUN /usr/bin/curl https://golang.google.cn/dl/go${gover}.linux-amd64.tar.gz -o go.tar.gz;\
+#     /usr/bin/tar -C /usr/local -xzf go.tar.gz; \
+#     rm -rf go.tar.gz
+RUN /usr/bin/curl https://mirrors.ustc.edu.cn/golang/go${gover}.linux-amd64.tar.gz -o go.tar.gz;\
+    /usr/bin/tar -C /usr/local -xzf go.tar.gz; \
+    rm -rf go.tar.gz
+
+# yum里的太老了
+# RUN yum install -y go git; yum clean all;
+
+RUN mkdir /srv/git
+
+VOLUME [ "/srv/git" ]

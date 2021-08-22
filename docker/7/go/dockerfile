@@ -1,5 +1,5 @@
 # 基于 ssh
-FROM local/centos:8-ssh
+FROM local/centos:7-ssh
 
 ENV gover=1.17
 ENV PATH=${PATH}:/usr/local/go/bin

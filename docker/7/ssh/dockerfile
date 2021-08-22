@@ -1,0 +1,20 @@
+FROM centos:7
+
+# install sshd
+RUN yum install -y openssh-server sudo; yum clean all
+
+# Configure SSH Server for password authentication
+RUN echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
+
+# changePwd
+RUN /usr/bin/echo 'root:123456' | /usr/sbin/chpasswd
+
+# Generating Keys
+## 不然sshd启动不起来
+# Unable to load host key: /etc/ssh/ssh_host_rsa_key
+# Unable to load host key: /etc/ssh/ssh_host_ecdsa_key
+# Unable to load host key: /etc/ssh/ssh_host_ed25519_key
+RUN ssh-keygen -A
+
+# To start service at runtime
+CMD ["/usr/sbin/sshd", "-D"]

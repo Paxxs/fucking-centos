@@ -1,5 +1,10 @@
 FROM centos:8
 
+# Configure mirror for cetnos8
+RUN rm /etc/yum.repos.d/* -f
+
+COPY ./tuna.repo /etc/yum.repos.d/tuna.repo
+
 # install sshd
 RUN yum install -y openssh-server sudo; yum clean all
 

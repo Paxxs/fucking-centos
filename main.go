@@ -31,10 +31,10 @@ func main() {
 
 	switch version {
 	case 8:
-		fish = `rpm/8/fish-3.3.1-1.4.x86_64.rpm`
-		tmux = `rpm/8/tmux-2.6-1.11.x86_64.rpm`
+		fish = `rpm/8/fish-3.5.1-1.1.x86_64.rpm`
+		tmux = `rpm/8/tmux-2.7-1.el8.x86_64.rpm`
 	case 7:
-		fish = `rpm/7/fish-3.3.1-1.1.x86_64.rpm`
+		fish = `rpm/7/fish-3.5.1-1.2.x86_64.rpm`
 		tmux = `rpm/7/tmux-2.9a-4.4.x86_64.rpm`
 	case 6:
 		fish = `rpm/6/fish-3.1.2+1603.gff144a38d-2.1.x86_64.rpm`

@@ -20,8 +20,8 @@ func main() {
 	var fish = ""
 	var tmux = ""
 	version := getCentosVersion("major")
-	fmt.Println("😀当前系统为", version, "版本")
-	fmt.Println("Made with ❤️ by yrjyjp")
+	fmt.Println("Current system is redhat", version)
+	fmt.Println("Retrieving packages...")
 
 	// 查看嵌入的资源
 	// dirEntries, _ := f.ReadDir("rpm")
@@ -41,10 +41,10 @@ func main() {
 		tmux = `rpm/6/tmux-2.9a-4.1.x86_64.rpm`
 	}
 
-	fmt.Println("📦 install Shell")
+	fmt.Println("install fish packages")
 	installPackage(fish)
 
-	fmt.Println("📦 install Terminal Multiplexer")
+	fmt.Println("install terminal multiplexer")
 	installPackage(tmux)
 }
 
@@ -142,7 +142,7 @@ func runCommand(name string, arg ...string) error {
 			}
 			break
 		}
-		fmt.Printf("=> %s\n", string(output))
+		fmt.Printf("-> %s\n", string(output))
 	}
 	//wait 方法会一直阻塞到其所属的命令完全运行结束为止
 	if err = cmd.Wait(); err != nil {
